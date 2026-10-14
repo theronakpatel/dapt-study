@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DAPT-ACS Case Record Form</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f3f6fb; --card:#fff; --ink:#1b2433; --muted:#667085; --line:#e3e8f0;
+    --accent:#0f766e; --accent-soft:#e6f4f2; --accent-ink:#fff; --danger:#c2410c; --field:#f8fafc;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.45}
+  header{background:linear-gradient(120deg,#0f766e,#155e75);color:#fff;padding:28px 16px 64px}
+  header .wrap{max-width:980px;margin:0 auto}
+  header small{opacity:.8;letter-spacing:.08em;text-transform:uppercase;font-size:12px;font-weight:600}
+  header h1{margin:6px 0 4px;font-size:clamp(20px,3vw,26px);font-weight:700;line-height:1.25}
+  header p{margin:0;opacity:.85;font-size:14px}
+  main{max-width:980px;margin:-40px auto 40px;padding:0 16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:18px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+  .card h2{margin:0 0 16px;font-size:16px;display:flex;align-items:center;gap:10px}
+  .card h2 .n{background:var(--accent-soft);color:var(--accent);width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-size:14px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px 18px}
+  .full{grid-column:1/-1}
+  label.f{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:#344054}
+  .f > label.f{display:block}
+  .f .hint{font-weight:400;color:var(--muted)}
+  input[type=text],input[type=number],input[type=date],textarea,select{
+    font:inherit;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--field);color:var(--ink);width:100%}
+  input:focus,textarea:focus,select:focus{outline:2px solid var(--accent);outline-offset:-1px;background:#fff}
+  .unit{display:flex;align-items:center;gap:8px}.unit span{color:var(--muted);font-size:13px;font-weight:500;white-space:nowrap}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{position:relative;cursor:pointer}
+  .chip input{position:absolute;opacity:0;pointer-events:none}
+  .chip span{display:inline-block;padding:7px 13px;border:1px solid var(--line);border-radius:999px;background:var(--field);font-size:13.5px;font-weight:500;transition:.12s}
+  .chip:hover span{border-color:#b6c2d2}
+  .chip input:checked+span{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+  .chip input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+  .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+  table{border-collapse:collapse;width:100%;font-size:14px}
+  th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left}
+  th{background:#f8fafc;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+  tr:last-child td{border-bottom:none}
+  td select{min-width:92px;padding:6px 8px}
+  td.w{text-align:center;color:var(--muted)} tfoot td{font-weight:700;background:var(--accent-soft)}
+  .note{font-size:12.5px;color:var(--muted);margin:10px 0 0}
+  .adr{display:grid;grid-template-columns:2fr 1.3fr 1fr auto;gap:10px;align-items:end;padding:12px;border:1px dashed var(--line);border-radius:10px;margin-top:10px}
+  .adr .acts{grid-column:1/-1}
+  .btn{font:inherit;font-weight:600;border:0;border-radius:10px;padding:11px 20px;cursor:pointer}
+  .btn.primary{background:var(--accent);color:#fff}.btn.primary:hover{filter:brightness(1.08)}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+  .btn.link{background:none;color:var(--danger);padding:6px 8px;font-size:13px}
+  .btn:disabled{opacity:.6;cursor:wait}
+  .actions{position:sticky;bottom:0;background:rgba(243,246,251,.92);backdrop-filter:blur(6px);padding:14px 0;display:flex;gap:10px;justify-content:flex-end;border-top:1px solid var(--line)}
+  details.key summary{cursor:pointer;font-size:13px;color:var(--accent);font-weight:600;margin-top:12px}
+  details.key table{margin-top:8px;font-size:13px}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,120px);background:#101828;color:#fff;padding:12px 18px;border-radius:10px;font-weight:500;transition:.25s;max-width:calc(100% - 32px);z-index:9}
+  .toast.show{transform:translate(-50%,0)} .toast.err{background:var(--danger)}
+  .req{color:var(--danger)}
+  @media (max-width:640px){.adr{grid-template-columns:1fr}.card{padding:16px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <small>Form III · Case Record Form</small>
+  <h1>Prescribing Patterns in Patients Receiving DAPT for Acute Coronary Syndrome</h1>
+  <p>A Prospective Observational Study</p>
+</div></header>
+
+<main>
+<form id="crf" autocomplete="off" novalidate>
+
+  <section class="card">
+    <div class="grid">
+      <label class="f">Protocol No.
+        <div class="unit"><span>KBIEC / 2026 /</span><input type="text" name="protocol_no"></div>
+      </label>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="n">1</span>Patient details</h2>
+    <div class="grid">
+      <label class="f"><span>Study ID <span class="req">*</span></span><input type="text" name="study_id" required></label>
+      <label class="f">IP No.<input type="text" name="ip_no"></label>
+      <label class="f">Age<div class="unit"><input type="number" name="age" min="0" max="120"><span>years</span></div></label>
+      <div class="f"><label class="f">Sex</label><div class="chips" data-name="sex" data-opts="Male|Female|Other"></div></div>
+      <label class="f">Height<div class="unit"><input type="number" name="height_cm" step="0.1"><span>cm</span></div></label>
+      <label class="f">Weight<div class="unit"><input type="number" name="weight_kg" step="0.1"><span>kg</span></div></label>
+      <div class="f"><label class="f">Smoking history</label><div class="chips" data-name="smoking_status" data-opts="Never|Ex|Current"></div></div>
+      <div class="f"><label class="f">Smoking (currently)</label><div class="chips" data-name="smoking_current" data-opts="Yes|Sometime|No"></div></div>
+      <label class="f">Admission date<input type="date" name="admission_date"></label>
+      <label class="f">Discharge date<input type="date" name="discharge_date"></label>
+      <label class="f">Allergies<input type="text" name="allergies"></label>
+      <div class="f"><label class="f">Consent taken</label><div class="chips" data-name="consent" data-opts="Yes|No"></div></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="n">2</span>Diagnosis and PCI</h2>
+    <div class="grid">
+      <div class="f"><label class="f">ACS type</label><div class="chips" data-name="acs_type" data-opts="STEMI|NSTEMI|Unstable angina"></div></div>
+      <div class="f"><label class="f">Stent type</label><div class="chips" data-name="stent_type" data-opts="DES|BMS|POBA"></div></div>
+      <label class="f">Number of stents<input type="number" name="num_stents" min="0"></label>
+      <div class="f"><label class="f">Culprit vessel <span class="hint">(select all that apply)</span></label><div class="chips" data-name="culprit_vessel" data-multi data-opts="LAD|LCx|RCA|Other"></div></div>
+      <label class="f">Culprit vessel – other<input type="text" name="culprit_other"></label>
+      <label class="f">Haemoglobin<div class="unit"><input type="number" name="haemoglobin" step="0.1"><span>g/dL</span></div></label>
+      <label class="f">Serum creatinine<div class="unit"><input type="number" name="serum_creatinine" step="0.01"><span>mg/dL</span></div></label>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="n">3</span>Past history &amp; comorbidity</h2>
+    <div class="grid">
+      <div class="f"><label class="f">Hypertension</label><div class="chips" data-name="hypertension" data-opts="Yes|No"></div></div>
+      <div class="f"><label class="f">Diabetes</label><div class="chips" data-name="diabetes" data-opts="Yes|No"></div></div>
+      <div class="f"><label class="f">CKD</label><div class="chips" data-name="ckd" data-opts="Yes|No"></div></div>
+      <div class="f"><label class="f">Dyslipidaemia</label><div class="chips" data-name="dyslipidaemia" data-opts="Yes|No"></div></div>
+      <div class="f"><label class="f">Previous MI / PCI</label><div class="chips" data-name="previous_mi_pci" data-opts="Yes|No"></div></div>
+      <div class="f"><label class="f">Previous bleeding</label><div class="chips" data-name="previous_bleeding" data-opts="Yes|No"></div></div>
+      <label class="f full">Other<input type="text" name="other_comorbidity"></label>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="n">4</span>DAPT prescribed</h2>
+    <div class="grid">
+      <label class="f">Aspirin – loading<div class="unit"><input type="number" name="aspirin_loading_mg"><span>mg</span></div></label>
+      <label class="f">Aspirin – maintenance<div class="unit"><input type="number" name="aspirin_maintenance_mg"><span>mg OD</span></div></label>
+      <div class="f full"><label class="f">P2Y12 inhibitor</label><div class="chips" data-name="p2y12_inhibitor" data-opts="Clopidogrel|Ticagrelor|Prasugrel|Other"></div></div>
+      <label class="f">P2Y12 – other<input type="text" name="p2y12_other"></label>
+      <label class="f">P2Y12 – loading<div class="unit"><input type="number" name="p2y12_loading_mg"><span>mg</span></div></label>
+      <label class="f">P2Y12 – maintenance<div class="unit"><input type="number" name="p2y12_maintenance_mg"><span>mg</span></div></label>
+      <div class="f"><label class="f">P2Y12 frequency</label><div class="chips" data-name="p2y12_frequency" data-opts="OD|BD"></div></div>
+      <label class="f">Intended DAPT duration<div class="unit"><input type="number" name="dapt_duration_months" min="0"><span>months</span></div></label>
+      <div class="f full"><label class="f">PPI</label><div class="chips" data-name="ppi" data-opts="Pantoprazole|Rabeprazole|Omeprazole|None"></div></div>
+      <div class="f"><label class="f">Anticoagulant</label><div class="chips" data-name="anticoagulant" data-opts="None|Warfarin|NOAC"></div></div>
+      <div class="f"><label class="f">Choice and dose appropriate</label><div class="chips" data-name="choice_dose_appropriate" data-opts="Yes|No"></div></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="n">5</span>MAI assessment</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>No.</th><th>Criterion</th><th>Weight</th><th>Aspirin</th><th>P2Y12</th><th>PPI</th></tr></thead>
+        <tbody id="mai"></tbody>
+        <tfoot><tr><td></td><td>Total score</td><td></td><td id="t_aspirin">0</td><td id="t_p2y12">0</td><td id="t_ppi">0</td></tr></tfoot>
+      </table>
+    </div>
+    <p class="note">A = appropriate · B = marginally appropriate · C = inappropriate (adds the weight to the score) · NA = not applicable. Higher total = less appropriate.</p>
+  </section>
+
+  <section class="card">
+    <h2><span class="n">6</span>Outcomes during hospital stay</h2>
+    <div class="grid">
+      <div class="f full"><label class="f">MACE <span class="hint">(select all that apply)</span></label><div class="chips" data-name="mace" data-multi data-opts="None|Cardiac death|Recurrent MI|Stent thrombosis|Stroke|Urgent repeat revascularization"></div></div>
+      <div class="f full"><label class="f">ADR / bleeding</label><div class="chips" data-name="adr_bleeding" data-opts="None|Yes"></div></div>
+    </div>
+    <div id="adrBox" hidden>
+      <div id="adrList"></div>
+      <button type="button" class="btn ghost" id="addAdr" style="margin-top:10px">+ Add event</button>
+      <details class="key">
+        <summary>BARC type key</summary>
+        <div class="table-wrap"><table>
+          <tr><th>Type</th><th>Meaning</th></tr>
+          <tr><td>1</td><td>Not actionable; no unplanned medical attention</td></tr>
+          <tr><td>2</td><td>Overt, actionable bleeding needing treatment</td></tr>
+          <tr><td>3a</td><td>Any transfusion OR Hb drop 3–5 g/dL</td></tr>
+          <tr><td>3b</td><td>Hb drop &gt;5 g/dL OR needs surgery OR vasopressor</td></tr>
+          <tr><td>3c</td><td>Intracerebral OR intraocular bleed</td></tr>
+          <tr><td>5a</td><td>Probable fatal bleeding</td></tr>
+          <tr><td>5b</td><td>Definite fatal bleeding (confirmed by imaging or autopsy)</td></tr>
+        </table></div>
+      </details>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="n">✓</span>Sign-off</h2>
+    <div class="grid">
+      <label class="f">Data collected by<input type="text" name="collected_by"></label>
+      <label class="f">Date<input type="date" name="collected_date"></label>
+      <label class="f">Verified by (Guide)<input type="text" name="verified_by"></label>
+      <label class="f">Date<input type="date" name="verified_date"></label>
+    </div>
+  </section>
+
+  <div class="actions">
+    <button type="reset" class="btn ghost">Clear</button>
+    <button type="submit" class="btn primary" id="submitBtn">Save record</button>
+  </div>
+</form>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+
+// Chip groups (radio / checkbox)
+document.querySelectorAll('.chips').forEach(box => {
+  const type = box.hasAttribute('data-multi') ? 'checkbox' : 'radio';
+  box.innerHTML = box.dataset.opts.split('|').map(o =>
+    `<label class="chip"><input type="${type}" name="${box.dataset.name}" value="${o}"><span>${o}</span></label>`).join('');
+});
+// Allow un-selecting a radio chip by clicking it again
+document.addEventListener('click', e => {
+  const r = e.target.closest('.chip input[type=radio]'); if (!r) return;
+  if (r.dataset.was === '1') { r.checked = false; r.dataset.was = ''; r.dispatchEvent(new Event('change', {bubbles:true})); }
+  else document.querySelectorAll(`input[name="${r.name}"]`).forEach(x => x.dataset.was = x === r ? '1' : '');
+});
+
+// MAI table
+const CRIT = [['indication','Indication',3],['effectiveness','Effectiveness',3],['dosage','Dosage',2],
+  ['correct_directions','Correct directions',2],['practical_directions','Practical directions',1],
+  ['drug_drug_interaction','Drug–drug interaction',2],['drug_disease_interaction','Drug–disease interaction',2],
+  ['duplication','Duplication',1],['duration','Duration',1],['cost','Cost',1]];
+const DRUGS = ['aspirin','p2y12','ppi'];
+const sel = n => `<select name="${n}"><option value="">—</option><option>A</option><option>B</option><option>C</option><option>NA</option></select>`;
+$('#mai').innerHTML = CRIT.map(([k,l,w],i) =>
+  `<tr><td>${i+1}</td><td>${l}</td><td class="w">${w}</td>${DRUGS.map(d => `<td>${sel(`mai_${k}_${d}`)}</td>`).join('')}</tr>`).join('');
+function maiTotals(){
+  DRUGS.forEach(d => $('#t_'+d).textContent =
+    CRIT.reduce((s,[k,,w]) => s + (document.querySelector(`[name="mai_${k}_${d}"]`).value === 'C' ? w : 0), 0));
+}
+$('#mai').addEventListener('change', maiTotals);
+
+// ADR rows
+const MAX_ADR = 5; let adrN = 0;
+function addAdr(){
+  if (adrN >= MAX_ADR) return;
+  adrN++;
+  const i = adrN, d = document.createElement('div');
+  d.className = 'adr';
+  d.innerHTML = `
+    <label class="f">ADR / bleeding event<input type="text" name="adr${i}_event"></label>
+    <label class="f">Suspected drug<input type="text" name="adr${i}_drug"></label>
+    <label class="f">BARC type<select name="adr${i}_barc"><option value="">—</option>${['1','2','3a','3b','3c','5a','5b'].map(b=>`<option>${b}</option>`).join('')}</select></label>
+    <button type="button" class="btn link" title="Remove">Remove</button>
+    <div class="f acts"><span class="f">Action</span><div class="chips">${['None','Dose change','Stopped'].map(o =>
+      `<label class="chip"><input type="radio" name="adr${i}_action" value="${o}"><span>${o}</span></label>`).join('')}</div></div>`;
+  d.querySelector('.link').onclick = () => { d.remove(); renumberAdr(); };
+  $('#adrList').append(d);
+  $('#addAdr').hidden = adrN >= MAX_ADR;
+}
+function renumberAdr(){
+  const rows = [...document.querySelectorAll('.adr')]; adrN = rows.length;
+  rows.forEach((r,idx) => r.querySelectorAll('[name]').forEach(el => el.name = el.name.replace(/^adr\d+/, 'adr'+(idx+1))));
+  $('#addAdr').hidden = adrN >= MAX_ADR;
+}
+$('#addAdr').onclick = addAdr;
+document.addEventListener('change', e => {
+  if (e.target.name !== 'adr_bleeding') return;
+  const yes = document.querySelector('[name=adr_bleeding]:checked')?.value === 'Yes';
+  $('#adrBox').hidden = !yes;
+  if (yes && !adrN) addAdr();
+});
+
+function toast(msg, err){
+  const t = $('#toast'); t.textContent = msg; t.className = 'toast show' + (err ? ' err' : '');
+  clearTimeout(t._h); t._h = setTimeout(() => t.className = 'toast', 3500);
+}
+
+function resetAll(){
+  $('#crf').reset();
+  $('#adrList').innerHTML = ''; adrN = 0; $('#addAdr').hidden = false; $('#adrBox').hidden = true;
+  document.querySelectorAll('.chip input').forEach(x => x.dataset.was = '');
+  setTimeout(maiTotals);
+}
+$('#crf').addEventListener('reset', e => { e.preventDefault(); if (confirm('Clear the whole form?')) resetAll(); });
+
+$('#crf').addEventListener('submit', async e => {
+  e.preventDefault();
+  const sid = $('[name=study_id]');
+  if (!sid.value.trim()) { toast('Study ID is required', true); sid.focus(); return; }
+  const btn = $('#submitBtn'); btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    const res = await fetch('/submit', { method:'POST', body: new URLSearchParams(new FormData(e.target)) });
+    const j = await res.json();
+    if (!j.ok) throw new Error(j.error || 'Save failed');
+    toast(`Saved record for Study ID ${j.study_id}`);
+    resetAll(); window.scrollTo({top:0, behavior:'smooth'});
+  } catch (err) { toast(err.message || 'Could not reach server', true); }
+  finally { btn.disabled = false; btn.textContent = 'Save record'; }
+});
+</script>
+</body>
+</html>
